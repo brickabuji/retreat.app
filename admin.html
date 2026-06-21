@@ -94,6 +94,35 @@ async function saveMindPostitToServer(text, pin) {
 
   alert("마음 포스트잇이 저장되었습니다.");
 }
+      document.addEventListener("DOMContentLoaded", () => {
+  const memoryForm = document.querySelector("#memoryForm");
+
+  if (!memoryForm) {
+    console.log("memoryForm을 찾지 못했습니다.");
+    return;
+  }
+
+  memoryForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const textInput = memoryForm.querySelector("textarea, input[type='text']");
+    const text = textInput ? textInput.value.trim() : "";
+
+    if (!text) {
+      alert("마음 포스트잇 내용을 입력해주세요.");
+      return;
+    }
+
+    const pin = "0717";
+
+    await saveMindPostitToServer(text, pin);
+
+    if (textInput) {
+      textInput.value = "";
+    }
+  }, true);
+});
 </script>
   </body>
 </html>
