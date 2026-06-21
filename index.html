@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#082c50" />
+    <title>브니엘 교회 여름수련회</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&family=Noto+Sans+KR:wght@600;800;900&display=swap');
+
+      :root {
+        --navy: #082c50;
+        --blue: #0d4f89;
+        --lime: #dfff63;
+        --white: #fff;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100svh;
+        background: #061c30;
+        color: var(--white);
+        font-family: "Noto Sans KR", system-ui, sans-serif;
+      }
+
+      button { font: inherit; }
+
+      .screen {
+        position: relative;
+        width: min(100%, 480px);
+        min-height: 100svh;
+        margin: 0 auto;
+        overflow: hidden;
+        background: var(--navy);
+      }
+
+      .cover {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: center top;
+      }
+
+      .screen::after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(2, 20, 37, .35) 0, transparent 15%);
+        pointer-events: none;
+      }
+
+      .topbar {
+        position: absolute;
+        z-index: 3;
+        inset: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: max(18px, env(safe-area-inset-top)) 19px 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: .13em;
+        text-shadow: 0 2px 10px rgba(0,0,0,.5);
+      }
+
+      .cross {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border: 1px solid rgba(255,255,255,.78);
+        border-radius: 50%;
+        color: var(--lime);
+        font-family: serif;
+        font-size: 19px;
+        background: rgba(4, 35, 62, .35);
+        backdrop-filter: blur(8px);
+      }
+
+      .season {
+        padding: 6px 9px;
+        border: 1px solid rgba(255,255,255,.48);
+        border-radius: 99px;
+        background: rgba(4, 35, 62, .38);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .1em;
+        backdrop-filter: blur(8px);
+      }
+
+      .welcome {
+        position: absolute;
+        z-index: 3;
+        top: 60%;
+        left: 14px;
+        display: flex;
+        width: min(46vw, 184px);
+        aspect-ratio: 1;
+        padding: 14px;
+        flex-direction: column;
+        justify-content: flex-end;
+        border: 1px solid rgba(255,255,255,.42);
+        border-radius: 22px;
+        background: linear-gradient(145deg, rgba(4, 40, 70, .94), rgba(4, 28, 50, .9));
+        box-shadow: 0 14px 34px rgba(0, 12, 25, .38);
+        backdrop-filter: blur(16px) saturate(1.2);
+        transform: translateY(-50%);
+      }
+
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0 0 5px;
+        color: var(--lime);
+        font-size: 8px;
+        font-weight: 900;
+        letter-spacing: .17em;
+      }
+
+      .kicker::before {
+        content: "";
+        width: 14px;
+        height: 2px;
+        background: currentColor;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: "Black Han Sans", "Noto Sans KR", sans-serif;
+        font-size: clamp(19px, 5.6vw, 24px);
+        font-weight: 900;
+        letter-spacing: -.055em;
+        line-height: 1.18;
+        text-wrap: balance;
+      }
+
+      h1 strong {
+        color: var(--lime);
+        font: inherit;
+        white-space: nowrap;
+      }
+
+      .actions {
+        display: block;
+        margin-top: 9px;
+      }
+
+      .primary {
+        width: 100%;
+        height: 36px;
+        border: 0;
+        cursor: pointer;
+        transition: transform .18s ease;
+      }
+
+      .primary {
+        border-radius: 15px;
+        background: var(--lime);
+        color: #102f47;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .primary:active { transform: scale(.97); }
+
+      .toast {
+        position: fixed;
+        z-index: 10;
+        left: 50%;
+        bottom: 24px;
+        width: min(calc(100% - 40px), 430px);
+        padding: 13px 16px;
+        border-radius: 14px;
+        background: rgba(255,255,255,.96);
+        color: var(--navy);
+        font-size: 12px;
+        font-weight: 800;
+        text-align: center;
+        opacity: 0;
+        transform: translate(-50%, 18px);
+        pointer-events: none;
+        transition: .24s ease;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      @media (min-width: 700px) {
+        body { padding: 32px 0; }
+        .screen {
+          min-height: min(900px, calc(100svh - 64px));
+          border: 1px solid rgba(255,255,255,.16);
+          border-radius: 34px;
+          box-shadow: 0 34px 80px rgba(0,0,0,.45);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="screen">
+      <img class="cover" src="./retreat-cover.png" alt="권능을 받고 여름수련회 포스터와 브니엘 교회 공동체 사진" />
+
+      <header class="topbar">
+        <div class="brand"><span class="cross">✝</span><span>PENIEL CHURCH</span></div>
+        <span class="season">SUMMER 2026</span>
+      </header>
+
+      <section class="welcome">
+        <p class="kicker">PENIEL SUMMER</p>
+        <h1>브니엘교회<br />여름수련회<br /><strong>함께가요</strong></h1>
+        <div class="actions">
+          <button class="primary" id="invite" type="button">수련회 보러가기</button>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      const toast = document.querySelector('#toast');
+      let timer;
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(timer);
+        timer = setTimeout(() => toast.classList.remove('show'), 2200);
+      }
+
+      document.querySelector('#invite').addEventListener('click', () => {
+        window.location.href = './hub.html';
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#07365f" />
+    <title>브니엘 여름수련회</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@500;700;900&display=swap');
+      :root { --navy:#07365f; --blue:#0d5998; --lime:#dfff63; --ink:#16324a; --muted:#718396; --paper:#f4f7f7; }
+      * { box-sizing:border-box; }
+      body { margin:0; min-width:320px; background:#dce5e9; color:var(--ink); font-family:"Noto Sans KR",sans-serif; }
+      button, textarea, select { font:inherit; }
+      button { cursor:pointer; }
+      .app { width:min(100%,480px); min-height:100svh; margin:auto; padding-bottom:88px; background:var(--paper); }
+      .hero { position:relative; overflow:hidden; min-height:256px; padding:20px 20px 25px; border-radius:0 0 32px 32px; background:linear-gradient(145deg,#062d51,#0d5998); color:white; }
+      .hero::after { content:""; position:absolute; width:190px; height:190px; right:-60px; top:-30px; border:34px solid rgba(223,255,99,.12); border-radius:50%; }
+      .hero-top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; }
+      .back { border:0; background:transparent; color:white; font-size:22px; }
+      .admin-link { padding:7px 10px; border:1px solid rgba(255,255,255,.35); border-radius:999px; color:white; font-size:10px; font-weight:800; text-decoration:none; }
+      .hero-label { margin:20px 0 4px; color:var(--lime); font-size:10px; font-weight:900; letter-spacing:.14em; }
+      .hero h1 { margin:0; font-size:25px; line-height:1.25; letter-spacing:-.04em; }
+      .countdown { display:flex; align-items:end; gap:11px; margin-top:19px; }
+      .dday { color:var(--lime); font-size:54px; font-weight:900; letter-spacing:-.07em; line-height:.9; }
+      .date { color:rgba(255,255,255,.75); font-size:11px; line-height:1.55; }
+      .content { padding:20px 17px; }
+      .panel { display:none; }
+      .panel.active { display:block; animation:fade .2s ease; }
+      @keyframes fade { from { opacity:.4; transform:translateY(4px); } }
+      .section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+      .section-head h2 { margin:0; font-size:19px; letter-spacing:-.04em; }
+      .section-head small { color:var(--muted); font-size:10px; }
+      .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+      .info-card { min-height:106px; padding:15px; border-radius:19px; background:white; box-shadow:0 8px 22px rgba(21,53,78,.07); }
+      .info-card b { display:block; margin:9px 0 4px; font-size:14px; }
+      .info-card span { color:var(--muted); font-size:10px; line-height:1.55; }
+      .icon { display:grid; width:30px; height:30px; place-items:center; border-radius:10px; background:#eaf2f7; font-size:16px; }
+      .verse { margin-top:11px; padding:19px; border-radius:21px; background:#e7f1f5; font-family:"Gowun Dodum",sans-serif; font-size:14px; line-height:1.7; }
+      .verse strong { display:block; margin-bottom:5px; color:var(--blue); font-family:"Noto Sans KR",sans-serif; font-size:10px; letter-spacing:.09em; }
+      .notice-list { display:grid; gap:10px; }
+      .notice { padding:15px 16px; border-radius:17px; background:white; box-shadow:0 7px 20px rgba(21,53,78,.06); }
+      .notice.important { border-left:5px solid #ff795f; }
+      .notice-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+      .notice h3 { margin:0; font-size:14px; }
+      .notice time { flex:none; color:#8b9aa7; font-size:9px; }
+      .notice p { margin:8px 0 0; color:#5f7283; font-size:11px; line-height:1.65; white-space:pre-wrap; }
+      .empty { padding:35px 15px; border:1px dashed #bdcbd3; border-radius:18px; color:#81919e; font-size:12px; text-align:center; }
+      .post-form { padding:15px; border-radius:19px; background:white; box-shadow:0 8px 22px rgba(21,53,78,.07); }
+      .post-form textarea { width:100%; height:76px; resize:none; padding:11px; border:1px solid #d9e2e6; border-radius:13px; outline:none; font-size:12px; }
+      .form-row { display:grid; grid-template-columns:1fr auto; gap:8px; margin-top:8px; }
+      .post-form select { padding:0 10px; border:1px solid #d9e2e6; border-radius:12px; background:white; color:var(--ink); font-size:10px; }
+      .add-btn { padding:10px 14px; border:0; border-radius:12px; background:var(--navy); color:white; font-size:11px; font-weight:800; }
+      .post-board { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+      .postit { min-height:125px; padding:15px 13px; border-radius:4px 16px 5px 13px; box-shadow:0 8px 16px rgba(39,54,65,.12); transform:rotate(-1deg); }
+      .postit:nth-child(even) { transform:rotate(1.2deg); }
+      .postit b { display:block; margin-bottom:8px; font-size:9px; }
+      .postit p { margin:0; font-family:"Gowun Dodum",sans-serif; font-size:13px; line-height:1.55; }
+      .memory-empty { padding:40px 20px; border-radius:22px; background:linear-gradient(145deg,#dbeaf0,#f8fbfb); text-align:center; }
+      .memory-empty .big { font-size:44px; }
+      .memory-empty h3 { margin:8px 0 6px; font-size:17px; }
+      .memory-empty p { margin:0; color:var(--muted); font-size:11px; line-height:1.65; }
+      .memory-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+      .memory-card { overflow:hidden; border-radius:17px; background:white; box-shadow:0 8px 20px rgba(21,53,78,.08); }
+      .memory-card img { display:block; width:100%; aspect-ratio:1; object-fit:cover; }
+      .memory-card p { margin:0; padding:10px 11px 12px; font-family:"Gowun Dodum",sans-serif; font-size:11px; line-height:1.5; }
+      .nav { position:fixed; z-index:10; right:0; bottom:0; left:0; display:flex; justify-content:center; pointer-events:none; }
+      .nav-inner { display:grid; width:min(100%,480px); grid-template-columns:repeat(4,1fr); padding:9px 8px max(9px,env(safe-area-inset-bottom)); border-top:1px solid #dce5e9; background:rgba(255,255,255,.96); backdrop-filter:blur(14px); pointer-events:auto; }
+      .nav-btn { border:0; background:transparent; color:#8796a2; font-size:9px; font-weight:700; }
+      .nav-btn span { display:block; margin-bottom:3px; font-size:18px; }
+      .nav-btn.active { color:var(--blue); }
+      .toast { position:fixed; z-index:20; left:50%; bottom:90px; width:min(calc(100% - 40px),430px); padding:12px; border-radius:13px; background:#17364e; color:white; font-size:11px; text-align:center; opacity:0; transform:translate(-50%,12px); transition:.2s; pointer-events:none; }
+      .toast.show { opacity:1; transform:translate(-50%,0); }
+      @media(min-width:700px){ body{padding:28px 0}.app{border-radius:30px;overflow:hidden;box-shadow:0 28px 70px rgba(9,33,50,.24)} }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <div class="hero-top"><button class="back" onclick="location.href='./index.html'" aria-label="첫 화면으로">‹</button><a class="admin-link" href="./admin.html">관리자</a></div>
+        <p class="hero-label">2026 PENIEL SUMMER RETREAT</p>
+        <h1>성령이 임하시면<br />권능을 받고</h1>
+        <div class="countdown"><strong class="dday" id="dday">D-</strong><p class="date">2026. 07. 17 — 07. 18<br />담양군 월산 물구십리 휴양마을</p></div>
+      </header>
+
+      <div class="content">
+        <section class="panel active" data-panel="home">
+          <div class="section-head"><h2>수련회 홈</h2><small id="todayText"></small></div>
+          <div class="info-grid">
+            <article class="info-card"><span class="icon">📅</span><b>7월 17–18일</b><span>금요일부터 토요일까지<br />1박 2일</span></article>
+            <article class="info-card"><span class="icon">📍</span><b>담양군 월산</b><span>물구십리 휴양마을</span></article>
+            <article class="info-card"><span class="icon">🎤</span><b>박영돈 교수</b><span>고려신학대학원</span></article>
+            <article class="info-card"><span class="icon">🌊</span><b>권능을 받고</b><span>사도행전 1장 8절</span></article>
+          </div>
+          <blockquote class="verse"><strong>ACTS 1:8</strong>오직 성령이 너희에게 임하시면 너희가 권능을 받고 예루살렘과 온 유대와 사마리아와 땅끝까지 이르러 내 증인이 되리라 하시니라</blockquote>
+        </section>
+
+        <section class="panel" data-panel="notice">
+          <div class="section-head"><h2>수련회 공지</h2><small>관리자가 작성한 안내</small></div>
+          <div class="notice-list" id="noticeList"></div>
+        </section>
+
+        <section class="panel" data-panel="postit">
+          <div class="section-head"><h2>마음 포스트잇</h2><small>80자까지 작성</small></div>
+          <form class="post-form" id="postForm">
+            <textarea id="postText" maxlength="80" placeholder="수련회에서 기대하는 마음이나 기도 제목을 남겨보세요." required></textarea>
+            <div class="form-row"><select id="postType"><option>기대해요</option><option>기도해 주세요</option><option>감사해요</option></select><button class="add-btn" type="submit">익명으로 붙이기</button></div>
+          </form>
+          <div class="post-board" id="postBoard"></div>
+        </section>
+
+        <section class="panel" data-panel="memory">
+          <div class="section-head"><h2>우리의 추억</h2><small>사진과 한 문장</small></div>
+          <div id="memoryList"></div>
+        </section>
+      </div>
+    </main>
+
+    <nav class="nav"><div class="nav-inner">
+      <button class="nav-btn active" data-tab="home"><span>⌂</span>홈</button>
+      <button class="nav-btn" data-tab="notice"><span>●</span>공지</button>
+      <button class="nav-btn" data-tab="postit"><span>▧</span>포스트잇</button>
+      <button class="nav-btn" data-tab="memory"><span>▣</span>추억</button>
+    </div></nav>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      const NOTICE_KEY = 'peniel_notices_v1';
+      const POST_KEY = 'peniel_postits_v1';
+      const MEMORY_KEY = 'peniel_memories_v1';
+      const defaultNotices = [
+        { id:'welcome', title:'2026 여름수련회 안내', body:'7월 17일(금)부터 18일(토)까지 담양군 월산 물구십리 휴양마을에서 진행됩니다.', important:true, date:'2026.06.21' },
+        { id:'more', title:'세부 일정은 곧 안내드려요', body:'집합 시간과 준비물은 확정되는 대로 이 공지 탭에서 알려드리겠습니다.', important:false, date:'2026.06.21' }
+      ];
+      async function remote(resource, options={}){ const response=await fetch(`/.netlify/functions/${resource}`,{cache:'no-store',...options,headers:{'Content-Type':'application/json',...(options.headers||{})}}); if(!response.ok)throw new Error(`API ${response.status}`); return response.json(); }
+      function localItems(key){ try{return JSON.parse(localStorage.getItem(key))||[];}catch{return [];} }
+      async function getNotices(){ try{const items=await remote('notices');return items.length?items:defaultNotices;}catch{const saved=localItems(NOTICE_KEY);if(saved.length)return saved;localStorage.setItem(NOTICE_KEY,JSON.stringify(defaultNotices));return defaultNotices;} }
+      async function getPosts(){ try{return await remote('postits');}catch{return localItems(POST_KEY);} }
+      async function getMemories(){ try{return await remote('memories');}catch{return localItems(MEMORY_KEY);} }
+      function safe(tag, text, className=''){ const el=document.createElement(tag); if(className)el.className=className; if(text!==undefined)el.textContent=text; return el; }
+
+      function updateDday(){
+        const now=new Date(); const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+        const start=new Date(2026,6,17); const end=new Date(2026,6,18); const day=86400000;
+        const diff=Math.ceil((start-today)/day); const el=document.querySelector('#dday');
+        if(today<start) el.textContent=`D-${diff}`; else if(today<=end) el.textContent='D-DAY'; else el.textContent='수련회 완료';
+        document.querySelector('#todayText').textContent=`오늘 ${now.getMonth()+1}월 ${now.getDate()}일`;
+      }
+      async function renderNotices(){
+        const list=document.querySelector('#noticeList'); const items=await getNotices(); list.replaceChildren();
+        if(!items.length){list.append(safe('div','아직 등록된 공지가 없어요.','empty'));return;}
+        items.forEach(item=>{const card=safe('article',undefined,`notice${item.important?' important':''}`);const top=safe('div',undefined,'notice-top');top.append(safe('h3',item.title),safe('time',item.date));card.append(top,safe('p',item.body));list.append(card);});
+      }
+      const colors=['#fff1a8','#dff7c8','#cdeafa','#ffd9dd'];
+      async function renderPosts(){ const board=document.querySelector('#postBoard'); const items=await getPosts(); board.replaceChildren(); items.forEach((item,i)=>{const note=safe('article',undefined,'postit');note.style.background=colors[i%colors.length];note.append(safe('b',item.type),safe('p',item.text));board.append(note);}); }
+      async function renderMemories(){
+        const root=document.querySelector('#memoryList'); const items=await getMemories(); root.replaceChildren();
+        if(!items.length){const empty=safe('div',undefined,'memory-empty');empty.append(safe('div','📷','big'),safe('h3','추억을 준비하고 있어요'),safe('p','관리자가 사진을 등록하면 이곳에 표시됩니다.'));root.append(empty);return;}
+        const grid=safe('div',undefined,'memory-grid');items.forEach(item=>{const card=safe('article',undefined,'memory-card');const img=document.createElement('img');img.src=item.image;img.alt=item.caption||'브니엘 교회 수련회 추억 사진';img.loading='lazy';card.append(img,safe('p',item.caption||'우리의 소중한 수련회 추억'));grid.append(card);});root.append(grid);
+      }
+      function toast(message){const el=document.querySelector('#toast');el.textContent=message;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}
+
+      document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{
+        document.querySelectorAll('.nav-btn').forEach(x=>x.classList.toggle('active',x===btn));
+        document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.dataset.panel===btn.dataset.tab));
+        if(btn.dataset.tab==='notice')renderNotices();
+        if(btn.dataset.tab==='memory')renderMemories();
+      }));
+      document.querySelector('#postForm').addEventListener('submit',async e=>{
+        e.preventDefault(); const text=document.querySelector('#postText').value.trim(); if(!text)return;
+        const item={text,type:document.querySelector('#postType').value};
+        try{await remote('postits',{method:'POST',body:JSON.stringify(item)});}catch{const posts=localItems(POST_KEY);posts.unshift({...item,createdAt:new Date().toISOString()});localStorage.setItem(POST_KEY,JSON.stringify(posts));}
+        e.target.reset();await renderPosts();toast('포스트잇을 붙였어요!');
+      });
+      updateDday(); renderNotices(); renderPosts(); renderMemories();
+      setInterval(()=>{if(document.querySelector('[data-panel="postit"]').classList.contains('active'))renderPosts();},4000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#07365f" />
+    <title>브니엘 수련회 관리자</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap');
+      :root{--navy:#07365f;--lime:#dfff63;--ink:#17364e;--muted:#718391;--bg:#eef3f5}
+      *{box-sizing:border-box}body{margin:0;min-width:320px;background:#dfe7ea;color:var(--ink);font-family:"Noto Sans KR",sans-serif}button,input,textarea{font:inherit}.page{width:min(100%,480px);min-height:100svh;margin:auto;padding:22px 17px 50px;background:var(--bg)}
+      .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:21px}.header h1{margin:0;font-size:21px}.back{padding:8px 11px;border:1px solid #cbd7dd;border-radius:11px;background:white;color:var(--ink);font-size:11px;text-decoration:none}
+      .badge{display:inline-block;margin-bottom:7px;padding:5px 8px;border-radius:99px;background:#dbe8ee;color:var(--navy);font-size:8px;font-weight:900;letter-spacing:.1em}.card{margin-bottom:14px;padding:17px;border-radius:20px;background:white;box-shadow:0 8px 24px rgba(21,53,78,.07)}.card h2{margin:0 0 13px;font-size:16px}.label{display:block;margin:11px 0 6px;font-size:10px;font-weight:800}.field{width:100%;padding:11px 12px;border:1px solid #d6e0e5;border-radius:12px;outline:none;font-size:12px}.field:focus{border-color:#3d81b7}.body{height:100px;resize:none}.check{display:flex;align-items:center;gap:7px;margin:12px 0;color:#5f7281;font-size:11px}.submit{width:100%;padding:13px;border:0;border-radius:13px;background:var(--navy);color:white;font-size:12px;font-weight:900}.notice-list{display:grid;gap:9px}.notice{padding:13px;border:1px solid #e0e7ea;border-radius:14px}.notice-top{display:flex;align-items:start;justify-content:space-between;gap:10px}.notice h3{margin:0;font-size:12px}.notice p{margin:7px 0;color:#607382;font-size:10px;line-height:1.55;white-space:pre-wrap}.delete{flex:none;padding:5px 8px;border:0;border-radius:8px;background:#ffebe8;color:#d85847;font-size:9px}.empty{padding:20px;color:#82919d;font-size:11px;text-align:center}.hint{margin:10px 2px 0;color:#85949f;font-size:9px;line-height:1.6}
+      .file-field{width:100%;padding:10px;border:1px dashed #b9cad3;border-radius:13px;background:#f7fafb;font-size:10px}.memory-admin{display:grid;grid-template-columns:1fr 1fr;gap:9px}.memory-item{overflow:hidden;border:1px solid #e0e7ea;border-radius:14px;background:white}.memory-item img{display:block;width:100%;aspect-ratio:1;object-fit:cover}.memory-copy{display:flex;align-items:start;justify-content:space-between;gap:5px;padding:9px}.memory-copy p{margin:0;font-size:9px;line-height:1.45}.memory-copy .delete{padding:4px 6px}
+      .lock{position:fixed;z-index:30;inset:0;display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#062d51,#0d5998)}.lock.hidden{display:none}.login{width:min(100%,390px);padding:25px;border-radius:25px;background:white;box-shadow:0 25px 70px rgba(0,0,0,.25)}.login .icon{display:grid;width:50px;height:50px;place-items:center;border-radius:16px;background:#e7f1f5;font-size:24px}.login h2{margin:15px 0 6px;font-size:21px}.login p{margin:0 0 15px;color:var(--muted);font-size:11px;line-height:1.6}.pin{width:100%;padding:13px;border:1px solid #d5e0e5;border-radius:13px;text-align:center;font-size:18px;letter-spacing:.25em}.login-btn{width:100%;margin-top:10px;padding:13px;border:0;border-radius:13px;background:var(--lime);color:var(--navy);font-size:12px;font-weight:900}.error{min-height:18px;margin:7px 0 0;color:#dc5c4a;font-size:10px;text-align:center}
+      .toast{position:fixed;z-index:20;left:50%;bottom:25px;width:min(calc(100% - 40px),430px);padding:12px;border-radius:12px;background:#153950;color:white;font-size:11px;text-align:center;opacity:0;transform:translate(-50%,12px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+      @media(min-width:700px){body{padding:28px 0}.page{border-radius:30px;box-shadow:0 25px 70px rgba(8,35,53,.2)}}
+    </style>
+  </head>
+  <body>
+    <div class="lock" id="lock">
+      <form class="login" id="loginForm">
+        <div class="icon">🔐</div><h2>관리자 확인</h2><p>공지 작성 페이지입니다.<br />관리자 비밀번호를 입력해 주세요.</p>
+        <input class="pin" id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="••••" required />
+        <button class="login-btn" type="submit">관리자 페이지 열기</button><p class="error" id="loginError"></p>
+      </form>
+    </div>
+
+    <main class="page">
+      <header class="header"><div><span class="badge">ADMIN</span><h1>수련회 공지 관리</h1></div><a class="back" href="./hub.html">앱으로 돌아가기</a></header>
+      <section class="card">
+        <h2>새 공지 작성</h2>
+        <form id="noticeForm">
+          <label class="label" for="title">공지 제목</label><input class="field" id="title" maxlength="40" placeholder="예: 수련회 준비물 안내" required />
+          <label class="label" for="body">공지 내용</label><textarea class="field body" id="body" maxlength="300" placeholder="참가자들에게 전달할 내용을 입력하세요." required></textarea>
+          <label class="check"><input id="important" type="checkbox" /> 중요한 공지로 표시하기</label>
+          <button class="submit" type="submit">공지 등록하기</button>
+        </form>
+        <p class="hint">등록한 공지는 앱의 ‘공지’ 탭에 즉시 표시됩니다.</p>
+      </section>
+      <section class="card"><h2>등록된 공지</h2><div class="notice-list" id="noticeList"></div></section>
+      <section class="card">
+        <h2>추억 사진 등록</h2>
+        <form id="memoryForm">
+          <label class="label" for="memoryImage">사진 선택</label><input class="file-field" id="memoryImage" type="file" accept="image/*" required />
+          <label class="label" for="memoryCaption">사진 설명</label><input class="field" id="memoryCaption" maxlength="60" placeholder="예: 함께 웃었던 2025 여름수련회" />
+          <button class="submit" style="margin-top:12px" type="submit">추억 사진 등록하기</button>
+        </form>
+        <p class="hint">사진은 용량을 줄여 저장되며 앱의 ‘추억’ 탭에 표시됩니다.</p>
+      </section>
+      <section class="card"><h2>등록된 추억 사진</h2><div class="memory-admin" id="memoryList"></div></section>
+    </main>
+    <div class="toast" id="toast" role="status"></div>
+
+    <script>
+      const NOTICE_KEY='peniel_notices_v1'; const MEMORY_KEY='peniel_memories_v1'; const ADMIN_PIN='0717';
+      function localItems(key){try{return JSON.parse(localStorage.getItem(key))||[];}catch{return [];}}
+      function adminPin(){return sessionStorage.getItem('peniel_admin_pin')||ADMIN_PIN;}
+      async function remote(resource,options={}){const response=await fetch(`/.netlify/functions/${resource}`,{cache:'no-store',...options,headers:{'Content-Type':'application/json','X-Admin-Pin':adminPin(),...(options.headers||{})}});if(!response.ok)throw new Error(`API ${response.status}`);return response.json();}
+      async function getNotices(){try{return await remote('notices');}catch{return localItems(NOTICE_KEY);}}
+      async function getMemories(){try{return await remote('memories');}catch{return localItems(MEMORY_KEY);}}
+      function safe(tag,text,className=''){const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el;}
+      function formatDate(){const d=new Date();return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;}
+      function toast(message){const el=document.querySelector('#toast');el.textContent=message;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}
+      async function render(){const list=document.querySelector('#noticeList');const items=await getNotices();list.replaceChildren();if(!items.length){list.append(safe('div','등록된 공지가 없습니다.','empty'));return;}items.forEach(item=>{const card=safe('article',undefined,'notice');const top=safe('div',undefined,'notice-top');const title=safe('h3',`${item.important?'📌 ':''}${item.title}`);const del=safe('button','삭제','delete');del.type='button';del.addEventListener('click',async()=>{try{await remote(`notices?id=${encodeURIComponent(item.id)}`,{method:'DELETE'});}catch{localStorage.setItem(NOTICE_KEY,JSON.stringify(localItems(NOTICE_KEY).filter(x=>x.id!==item.id)));}await render();toast('공지를 삭제했어요.');});top.append(title,del);card.append(top,safe('p',`${item.body}\n${item.date}`));list.append(card);});}
+      async function renderMemories(){const list=document.querySelector('#memoryList');const items=await getMemories();list.replaceChildren();if(!items.length){list.append(safe('div','등록된 사진이 없습니다.','empty'));return;}items.forEach(item=>{const card=safe('article',undefined,'memory-item');const img=document.createElement('img');img.src=item.image;img.alt=item.caption||'수련회 추억 사진';const copy=safe('div',undefined,'memory-copy');const del=safe('button','삭제','delete');del.type='button';del.addEventListener('click',async()=>{try{await remote(`memories?id=${encodeURIComponent(item.id)}`,{method:'DELETE'});}catch{localStorage.setItem(MEMORY_KEY,JSON.stringify(localItems(MEMORY_KEY).filter(x=>x.id!==item.id)));}await renderMemories();toast('추억 사진을 삭제했어요.');});copy.append(safe('p',item.caption||'수련회 추억'),del);card.append(img,copy);list.append(card);});}
+      function resizeImage(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=reject;reader.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{const max=1200;const scale=Math.min(1,max/Math.max(img.width,img.height));const canvas=document.createElement('canvas');canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL('image/jpeg',.78));};img.src=reader.result;};reader.readAsDataURL(file);});}
+      document.querySelector('#loginForm').addEventListener('submit',e=>{e.preventDefault();const pin=document.querySelector('#pin').value;if(pin===ADMIN_PIN){sessionStorage.setItem('peniel_admin','ok');sessionStorage.setItem('peniel_admin_pin',pin);document.querySelector('#lock').classList.add('hidden');render();renderMemories();}else{document.querySelector('#loginError').textContent='비밀번호가 맞지 않아요.';}});
+      document.querySelector('#noticeForm').addEventListener('submit',async e=>{e.preventDefault();const item={title:document.querySelector('#title').value.trim(),body:document.querySelector('#body').value.trim(),important:document.querySelector('#important').checked};try{await remote('notices',{method:'POST',body:JSON.stringify(item)});}catch{const items=localItems(NOTICE_KEY);items.unshift({id:`notice-${Date.now()}`,...item,date:formatDate(),createdAt:new Date().toISOString()});localStorage.setItem(NOTICE_KEY,JSON.stringify(items));}e.target.reset();await render();toast('새 공지를 등록했어요!');});
+      document.querySelector('#memoryForm').addEventListener('submit',async e=>{e.preventDefault();const file=document.querySelector('#memoryImage').files[0];if(!file)return;const button=e.target.querySelector('button');button.disabled=true;button.textContent='사진 준비 중…';try{const image=await resizeImage(file);const item={image,caption:document.querySelector('#memoryCaption').value.trim()};try{await remote('memories',{method:'POST',body:JSON.stringify(item)});}catch{const items=localItems(MEMORY_KEY);items.unshift({id:`memory-${Date.now()}`,...item,date:formatDate(),createdAt:new Date().toISOString()});localStorage.setItem(MEMORY_KEY,JSON.stringify(items));}e.target.reset();await renderMemories();toast('추억 사진을 등록했어요!');}catch{toast('사진을 저장하지 못했어요. 다른 사진을 선택해 주세요.');}finally{button.disabled=false;button.textContent='추억 사진 등록하기';}});
+      if(sessionStorage.getItem('peniel_admin')==='ok'){document.querySelector('#lock').classList.add('hidden');render();renderMemories();}
+    </script>
+  </body>
+</html>
