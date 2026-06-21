@@ -248,5 +248,60 @@
       });
 
     </script>
+    <script>
+const POSTIT_API = "/.netlify/functions/posts";
+
+async function loadMindPostits() {
+  try {
+    const res = await fetch(POSTIT_API, {
+      method: "GET",
+      cache: "no-store"
+    });
+
+    const data = await res.json();
+    const posts = data.posts || [];
+
+    renderMindPostits(posts);
+  } catch (error) {
+    console.error("포스트잇 불러오기 실패:", error);
+  }
+}
+
+function renderMindPostits(posts) {
+  let board = document.querySelector("#postitBoard, #memoryBoard, .postit-board, .memory-list");
+
+  if (!board) {
+    board = document.createElement("div");
+    board.id = "postitBoard";
+    board.style.display = "grid";
+    board.style.gridTemplateColumns = "repeat(auto-fit, minmax(180px, 1fr))";
+    board.style.gap = "16px";
+    board.style.margin = "24px";
+    document.body.appendChild(board);
+  }
+
+  board.innerHTML = "";
+
+  posts.forEach(post => {
+    const item = document.createElement("div");
+    item.className = "mind-postit";
+    item.style.background = post.color || "#fff3a3";
+    item.style.padding = "18px";
+    item.style.borderRadius = "14px";
+    item.style.boxShadow = "0 8px 20px rgba(0,0,0,0.12)";
+    item.style.whiteSpace = "pre-wrap";
+    item.style.fontSize = "16px";
+    item.style.lineHeight = "1.5";
+    item.textContent = post.text;
+
+    board.appendChild(item);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadMindPostits();
+  setInterval(loadMindPostits, 4000);
+});
+</script>
   </body>
 </html>
